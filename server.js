@@ -12,7 +12,16 @@ const io = SocketIO(server);
 app.use(express.static(path.join(__dirname,'public')));
 // run it when other client connects
 io.on('connection', socket => {
-    console.log("New socket connection made..");
-})
-const PORT=8080 || process.env.PORT;
+    // welcome to the current user 
+    socket.emit('message', 'Welcome to MinionCord');
+    // alert when another user connects-- this works for all users except the one is joining
+    socket.broadcast.emit('message', 'A user has joined the chat');
+    // when  client disconnects
+    socket.on('disconnect', () =>{
+        //alert all users
+        io.emit('message', 'A user has left the chat');
+    });
+});
+
+const PORT=3000 || process.env.PORT;
 server.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
