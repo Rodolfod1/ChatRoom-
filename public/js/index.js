@@ -22,7 +22,7 @@ const socket = io();
 // Message from server
 socket.on('message', message => {
   console.log(message);
-  // outputMessage(message);
+   outputMessage(message);
 
   // // Scroll down
   // chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -50,20 +50,32 @@ chatForm.addEventListener('submit', e => {
  });
 
 // // Output message to DOM
-// function outputMessage(message) {
-//   const div = document.createElement('div');
-//   div.classList.add('message');
-//   const p = document.createElement('p');
-//   p.classList.add('meta');
-//   p.innerText = message.username;
-//   p.innerHTML += `<span>${message.time}</span>`;
-//   div.appendChild(p);
-//   const para = document.createElement('p');
-//   para.classList.add('text');
-//   para.innerText = message.text;
-//   div.appendChild(para);
-//   document.querySelector('.chat-messages').appendChild(div);
-// }
+function outputMessage(message) {
+  console.log("mensaje: "+message);
+  const div = document.createElement('div');
+  div.classList.add('message');
+  div.innerHTML= `<p class="meta">Rodo<span>10:20pm</span></p>
+  <p class="text"> ${message} </p>`; 
+  document.querySelector('.chat-messages').appendChild(div);
+
+
+  // const p = document.createElement('p');
+
+
+  // p.classList.add('meta');
+  // // p.innerText = message.username;
+  //  p.innerHTML += `<span>${message.time}</span>`;
+
+  // div.innerHTML 
+
+
+  // div.appendChild(p);
+  // const para = document.createElement('p');
+  // para.classList.add('text');
+  // para.innerText = message.text;
+  // div.appendChild(para);
+  // document.querySelector('.chat-messages').appendChild(div);
+}
 
 // // Add room name to DOM
 // function outputRoomName(room) {

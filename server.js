@@ -23,6 +23,7 @@ io.on('connection', socket => {
     });
     // here to listen to for the chat-messages 
     socket.on('chatMessage', (msg) =>{
+        io.emit('message', msg);
         console.log(msg);
     });
 });
