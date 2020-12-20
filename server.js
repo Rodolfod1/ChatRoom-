@@ -3,7 +3,11 @@ const path = require ('path');
 const http = require ('http');
 // configuring socket.io 
 const SocketIO = require ('socket.io');
+
 const formatMessage = require ('./utils/messages')
+const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require ('./utils/users')
+
+
 const express = require('express');
 const app = express();
 const server = http.createServer(app);
@@ -15,21 +19,44 @@ app.use(express.static(path.join(__dirname,'public')));
 const BotName = "Minion-Bot"
 // run it when other client connects
 io.on('connection', socket => {
-    // welcome to the current user 
-    socket.emit('message',formatMessage(BotName, 'Welcome to MinionCord'));
-    // alert when another user connects-- this works for all users except the one is joining
-    socket.broadcast.emit('message',formatMessage(BotName,  'A user has joined the chat'));
-    // when  client disconnects
-    socket.on('disconnect', () =>{
-        //alert all users
-        io.emit('message', formatMessage(BotName, 'A user has left the chat'));
+    socket.on('joinRoom',({username, room}) =>{
+        // setting the user for room 
+        const user=userJoin(socket.id, username, room);
+        socket.join(user.room);
+         // welcome to the current user 
+        socket.emit('message',formatMessage(BotName, 'Welcome to MinionCord'));
+        // alert when another user connects-- this works for all users except the one is joining
+        socket.broadcast.to(user.room).emit('message',formatMessage(BotName,  `${user.username} has joined the chat`));
+            //sending users and room info 
+    io.to(user.room).emit('roomUsers',{
+        room: user.room,
+        users: getRoomUsers(user.room)
+        });
     });
     // here to listen to for the chat-messages 
     socket.on('chatMessage', (msg) =>{
-        io.emit('message',formatMessage('USER', msg));
+        //getting the current user
+        const user= getCurrentUser(socket.id);
+        // added . to () since we are using the rooms
+        io.to(user.room).emit('message',formatMessage(user.username, msg));
         console.log(msg);
     });
-});
+    // when  client disconnects
+    socket.on('disconnect', () =>{
+        //getting the unique user that is leaving
+        const user = userLeave(socket.id);
+        if (user){
+        //alert all users
+        io.to(user.room).emit('message', formatMessage(BotName, `${user.username} has left the chat`));
+        };
+        //sending users and room info 
+    io.to(user.room).emit('roomUsers',{
+        room: user.room,
+        users: getRoomUsers(user.room)
+        });
+    });
+    });
+
 
 const PORT=3000 || process.env.PORT;
 server.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
