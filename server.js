@@ -21,6 +21,10 @@ io.on('connection', socket => {
         //alert all users
         io.emit('message', 'A user has left the chat');
     });
+    // here to listen to for the chat-messages 
+    socket.on('chatMessage', (msg) =>{
+        console.log(msg);
+    });
 });
 
 const PORT=3000 || process.env.PORT;
