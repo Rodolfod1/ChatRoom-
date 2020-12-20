@@ -1,5 +1,5 @@
 const chatForm = document.querySelector("#chat-form");
-// const chatMessages = document.querySelector(".chat-messages");
+const chatMessages = document.querySelector(".chat-messages");
 // const roomName = document.querySelector("#room-name");
 // const userList = document.querySelector("#users");
 
@@ -24,8 +24,8 @@ socket.on('message', message => {
   console.log(message);
    outputMessage(message);
 
-  // // Scroll down
-  // chatMessages.scrollTop = chatMessages.scrollHeight;
+  // Scroll down function for new messages
+  chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
 // Message submit
@@ -44,14 +44,13 @@ chatForm.addEventListener('submit', e => {
   // Emitting  message to server
   socket.emit('chatMessage', msg);
 
-//   // Clear input
-//   e.target.elements.msg.value = '';
-//   e.target.elements.msg.focus();
+  // Clear input field 
+  e.target.elements.msg.value = '';
+  e.target.elements.msg.focus();
  });
 
 // // Output message to DOM
 function outputMessage(message) {
-  console.log("mensaje: "+message);
   const div = document.createElement('div');
   div.classList.add('message');
   div.innerHTML= `<p class="meta">Rodo<span>10:20pm</span></p>
