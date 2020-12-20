@@ -3,11 +3,8 @@ const path = require ('path');
 const http = require ('http');
 // configuring socket.io 
 const SocketIO = require ('socket.io');
-
 const formatMessage = require ('./utils/messages')
 const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require ('./utils/users')
-
-
 const express = require('express');
 const app = express();
 const server = http.createServer(app);
@@ -39,7 +36,7 @@ io.on('connection', socket => {
         const user= getCurrentUser(socket.id);
         // added . to () since we are using the rooms
         io.to(user.room).emit('message',formatMessage(user.username, msg));
-        console.log(msg);
+        
     });
     // when  client disconnects
     socket.on('disconnect', () =>{
@@ -56,7 +53,5 @@ io.on('connection', socket => {
         });
     });
     });
-
-
 const PORT=3000 || process.env.PORT;
 server.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
