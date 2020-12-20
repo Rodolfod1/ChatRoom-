@@ -7,6 +7,7 @@ const formatMessage = require ('./utils/messages')
 const {userJoin, getCurrentUser, userLeave, getRoomUsers} = require ('./utils/users')
 const express = require('express');
 const app = express();
+const PORT=process.env.PORT || 3000 ;
 const server = http.createServer(app);
 //initializing  the var and passing server 
 const io = SocketIO(server);
@@ -53,5 +54,5 @@ io.on('connection', socket => {
         });
     });
     });
-const PORT=3000 || process.env.PORT;
+
 server.listen(PORT, () => console.log(`Server Running on port ${PORT}`));
