@@ -1,4 +1,4 @@
-// using the momentsjs for timestamp 
+// using the moments.js for timestamp 
 const moment = require('moment');
 
 function formatMessage(username, text) {
